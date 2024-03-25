@@ -25,21 +25,15 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - name: List contents of current directory
-        run: ls
-      - name: Print current directory
-        run: pwd
-      - name: Move to vis directory
-        run: cd vis
-      - name: Print current directory
-        run: pwd
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
       - name: Install dependencies
+        working-directory: vis
         run: npm install
       - name: Build
+        working-directory: vis
         run: npm ci && npm run build && cp dist/index.html dist/404.html
         env:
           PUBLIC_URL: /study-room
