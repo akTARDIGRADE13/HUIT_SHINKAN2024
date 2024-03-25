@@ -31,6 +31,8 @@ jobs:
         run: pwd
       - name: Move to vis directory
         run: cd vis
+      - name: Print current directory
+        run: pwd
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
