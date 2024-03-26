@@ -22,6 +22,8 @@ const App: FC = () => {
         <meta property="og:image:height" content="670" />
         <meta property="og:image:type" content="image/jpg" />
         <meta property="og:image:alt" content="バナー" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@akTARDIGRADE13"></meta>
         <meta
           property="og:url"
           content="https://aktardigrade13.github.io/HUIT_SHINKAN2024/"
