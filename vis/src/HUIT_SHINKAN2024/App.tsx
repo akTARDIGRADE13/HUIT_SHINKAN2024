@@ -8,7 +8,7 @@ import './App.css';
 
 const App: FC = () => {
   return (
-    <div>
+    <>
       <Helmet>
         <title>HUIT新歓2024_vis</title>
         <meta name="description" content="LT用のVisualizer" />
@@ -31,16 +31,17 @@ const App: FC = () => {
       </Helmet>
       <Routes>
         <Route
-          path="/HUIT_SHINKAN2024/"
+          path="/"
           element={
             <VisualizerInfoProvider>
               <Home />
             </VisualizerInfoProvider>
           }
+          exact
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </div>
+    </>
   );
 };
 
