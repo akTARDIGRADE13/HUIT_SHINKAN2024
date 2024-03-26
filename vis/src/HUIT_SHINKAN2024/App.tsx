@@ -16,7 +16,7 @@ const App: FC = () => {
         <meta property="og:description" content="スライドパズルのVisualizer" />
         <meta
           property="og:image"
-          content="https://github.com/akTARDIGRADE13/HUIT_SHINKAN2024/blob/main/vis/public/banner-meta.jpg"
+          content="https://aktardigrade13.github.io/HUIT_SHINKAN2024/banner-meta.jpg"
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="670" />
