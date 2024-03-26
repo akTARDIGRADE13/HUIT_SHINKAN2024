@@ -84,7 +84,7 @@ const Home: FC = () => {
   }
 
   let cost = fileContent.length;
-  if (mode === 'color1') {
+  if (mode === 'color1' && !all_flag) {
     cost = puzzleBoard.reduce((acc, row, idx) => {
       return (
         acc +
@@ -99,7 +99,7 @@ const Home: FC = () => {
         }, 0)
       );
     }, 0);
-  } else if (mode === 'color2') {
+  } else if (mode === 'color2' && !all_flag) {
     cost = puzzleBoard.reduce((acc, row, idx) => {
       return (
         acc +
