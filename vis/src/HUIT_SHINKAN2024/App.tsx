@@ -33,7 +33,7 @@ const App: FC = () => {
       </Helmet>
       <Routes>
         <Route
-          path="/"
+          path="/HUIT_SHINKAN2024/"
           element={
             <VisualizerInfoProvider>
               <Home />
