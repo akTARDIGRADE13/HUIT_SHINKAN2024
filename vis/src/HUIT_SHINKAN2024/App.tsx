@@ -39,7 +39,6 @@ const App: FC = () => {
               <Home />
             </VisualizerInfoProvider>
           }
-          exact
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
