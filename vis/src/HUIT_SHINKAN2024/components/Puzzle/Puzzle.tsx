@@ -5,16 +5,18 @@ import styles from './Puzzle.module.css';
 interface PuzzleProps {
   board: number[][];
   mode: string;
+  all_flag?: boolean;
 }
 
-const Puzzle: React.FC<PuzzleProps> = ({ board, mode }) => {
+const Puzzle: React.FC<PuzzleProps> = ({ board, mode, all_flag = false }) => {
   const tileSize = 500 / board.length;
 
   const getTileProps = (number: number, x: number, y: number) => {
     if (
-      mode === 'color1' &&
-      x === ((number / board.length) | 0) &&
-      y === number % board.length
+      all_flag ||
+      (mode === 'color1' &&
+        x === ((number / board.length) | 0) &&
+        y === number % board.length)
     ) {
       return { backgroundColor: 'correct' as const };
     } else if (mode === 'color2') {

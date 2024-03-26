@@ -94,6 +94,31 @@ const BaseVisualizer: React.FC<BaseVisualizerProps> = ({ children }) => {
     }
   }, [fileContent]);
 
+  // フレーム更新処理
+  const updateFrame = useCallback(
+    (newFrame: number) => {
+      setCurrentFrame(() => {
+        return Math.max(0, Math.min(maxFrame, newFrame));
+      });
+    },
+    [maxFrame, setCurrentFrame],
+  );
+
+  // 自動再生処理
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (isPlaying) {
+      interval = setInterval(() => {
+        updateFrame(currentFrame + 1);
+      }, 1000 / speed);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPlaying, currentFrame, speed, updateFrame]);
+
   return (
     <div className={styles.container}>
       <div className={styles['setting-container']}>

@@ -31,57 +31,89 @@ const Home: FC = () => {
   const dx: number[] = [0, 0, 1, -1],
     dy: number[] = [1, -1, 0, 0];
 
-  fileContent.split('').forEach((char, idx) => {
-    let k = -1;
-    if (char === 'R') k = 0;
-    else if (char === 'L') k = 1;
-    else if (char === 'D') k = 2;
-    else if (char === 'U') k = 3;
-    if (k === -1) {
-      err = idx + 1;
-      return;
-    }
-    const nx = x + dx[k];
-    const ny = y + dy[k];
-    if (Math.min(nx, ny) < 0 || Math.max(nx, ny) >= puzzleBoard.length) {
-      err = idx + 1;
-      return;
-    }
-    [puzzleBoard[x][y], puzzleBoard[nx][ny]] = [
-      puzzleBoard[nx][ny],
-      puzzleBoard[x][y],
-    ];
-    x = nx;
-    y = ny;
-  });
-
+  fileContent
+    .split('')
+    .slice(0, currentFrame)
+    .forEach((char, idx) => {
+      let k = -1;
+      if (char === 'R') k = 0;
+      else if (char === 'L') k = 1;
+      else if (char === 'D') k = 2;
+      else if (char === 'U') k = 3;
+      if (k === -1) {
+        err = idx + 1;
+        return;
+      }
+      const nx = x + dx[k];
+      const ny = y + dy[k];
+      if (Math.min(nx, ny) < 0 || Math.max(nx, ny) >= puzzleBoard.length) {
+        err = idx + 1;
+        return;
+      }
+      [puzzleBoard[x][y], puzzleBoard[nx][ny]] = [
+        puzzleBoard[nx][ny],
+        puzzleBoard[x][y],
+      ];
+      x = nx;
+      y = ny;
+    });
   let headerText = '';
-  let cost = 0;
-  if (mode === 'normal' || mode === 'manual') {
-    headerText = 'Total Cost:';
-    cost = fileContent.length;
-  } else if (mode === 'color1') {
-    headerText = 'Correct:';
-    puzzleBoard.forEach((row, idx) => {
-      row.forEach((num, idx2) => {
-        if (
+  let all_flag = true;
+
+  puzzleBoard.forEach((row, idx) => {
+    row.forEach((num, idx2) => {
+      if (
+        !(
           idx === (((num - 1) / puzzleBoard.length) | 0) &&
           idx2 === (num - 1) % puzzleBoard.length
-        ) {
-          cost += 1;
-        }
-      });
+        ) ||
+        num === 0
+      ) {
+        all_flag = false;
+        return;
+      }
     });
+  });
+
+  if (all_flag || mode === 'normal' || mode === 'manual') {
+    headerText = 'Total Cost:';
+  } else if (mode === 'color1') {
+    headerText = 'Correct:';
   } else {
     headerText = 'Manhattan Cost:';
-    puzzleBoard.forEach((row, idx) => {
-      row.forEach((num, idx2) => {
-        if (num === 0) return;
-        cost +=
-          Math.abs(idx - (((num - 1) / puzzleBoard.length) | 0)) +
-          Math.abs(idx2 - ((num - 1) % puzzleBoard.length));
-      });
-    });
+  }
+
+  let cost = fileContent.length;
+  if (mode === 'color1') {
+    cost = puzzleBoard.reduce((acc, row, idx) => {
+      return (
+        acc +
+        row.reduce((innerAcc, num, idx2) => {
+          return (
+            innerAcc +
+            (idx === (((num - 1) / puzzleBoard.length) | 0) &&
+            idx2 === (num - 1) % puzzleBoard.length
+              ? 1
+              : 0)
+          );
+        }, 0)
+      );
+    }, 0);
+  } else if (mode === 'color2') {
+    cost = puzzleBoard.reduce((acc, row, idx) => {
+      return (
+        acc +
+        row.reduce((innerAcc, num, idx2) => {
+          return (
+            innerAcc +
+            (num !== 0
+              ? Math.abs(idx - (((num - 1) / puzzleBoard.length) | 0)) +
+                Math.abs(idx2 - ((num - 1) % puzzleBoard.length))
+              : 0)
+          );
+        }, 0)
+      );
+    }, 0);
   }
 
   return (
@@ -95,7 +127,7 @@ const Home: FC = () => {
               <h2>
                 {headerText} {cost}
               </h2>
-              <Puzzle board={puzzleBoard} mode={mode} />
+              <Puzzle board={puzzleBoard} mode={mode} all_flag={all_flag} />
             </>
           )}
         </BaseVisualizer>
