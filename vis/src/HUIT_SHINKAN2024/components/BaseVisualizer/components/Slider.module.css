@@ -1,0 +1,40 @@
+.slider-container {
+    width: 100%;
+    margin: auto;
+  }
+  
+  .slider {
+    position: relative;
+    width: 100%;
+    height: 8px;
+    margin-bottom: 8px; /* ラベルとの間隔を設定 */
+    background-color: var(--gray-25);
+    border-radius: 4px;
+  }
+  
+  .slider-thumb {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 20px;
+    cursor: pointer;
+    background-color: var(--accent);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* オプション: ドラッグ可能なボタンに影をつける場合に追加 */
+  .slider-thumb:hover {
+    box-shadow: 0 0 5px var(--dark-accent);
+  }
+  
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--gray-75); /* ラベルのテキスト色を設定 */
+  }
+  
+  .slider-value {
+    margin-left: 8px;
+    font-weight: bold;
+  }

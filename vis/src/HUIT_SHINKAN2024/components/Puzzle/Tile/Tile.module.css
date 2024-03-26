@@ -1,0 +1,19 @@
+/* Tile.module.css */
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--body);
+  font-weight: bold;
+  color: var(--gray-75);
+  cursor: pointer;
+  border: 2px solid var(--gray-25);
+  border-radius: 10px; /* 角丸め */
+  transition: all 0.3s ease;
+}
+
+
+/* 追加 */
+:root {
+  --board-size: 1; /* 初期値を設定 */
+}

@@ -1,0 +1,26 @@
+/* PlayButton.module.css */
+
+.play-button {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    font-size: var(--small-body); 
+    color: var(--white); 
+    cursor: pointer;
+    background-color: var(--accent); /* 例: 背景色を青に変更 */
+    border: none;
+    border-radius: 50%;
+    transition: background-color 0.3s ease; /* ホバー時のアニメーション */
+  }
+  
+  .play-button:hover {
+    background-color: var(--dark-accent); /* 例: ホバー時の背景色を濃い青に変更 */
+  }
+  
+  /* オプション: テキストの中央寄せをする場合に追加 */
+  .play-button input {
+    display: block;
+    margin: auto;
+  }
+  

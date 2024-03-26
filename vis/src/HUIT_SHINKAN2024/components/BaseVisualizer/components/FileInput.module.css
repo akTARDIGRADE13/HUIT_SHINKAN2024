@@ -1,0 +1,16 @@
+.file-input {
+    display: none;
+  }
+  
+  .file-label {
+    display: inline-block;
+    padding: 8px 16px;
+    overflow: hidden;
+    color: var(--white);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: var(--accent);
+    border-radius: 4px;
+  }
+  

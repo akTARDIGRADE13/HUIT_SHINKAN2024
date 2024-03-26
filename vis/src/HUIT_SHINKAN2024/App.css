@@ -1,42 +1,73 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+  /* カラー（色） */
+  --white: #fff;
+  --gray-10: #eee;
+  --gray-25: #aaa;
+  --gray-50: #707070;
+  --gray-75: #444;
+  --black: #333;
+  --light-accent: #4caaed;
+  --accent: #0d87e0;
+  --dark-accent: #005580;
+
+  /* タイポグラフィ（フォントサイズ） */
+  --small-body: clamp(0.8rem, 0.7rem + 0.2vw, 1.0rem);
+  --body: clamp(1.0rem, 0.95rem + 0.2vw, 1.5rem);
+  --display: clamp(3.0rem, 2.5rem + 5vw, 6rem);
+  --heading1: calc(var(--body) * 2.0);
+  --heading2: calc(var(--body) * 1.5);
+  --heading3: calc(var(--body) * 1.2);
+  --small-heading2: clamp(0.875rem, 4vw - 1rem, 1.6875rem);
+  --small-heading3: calc(var(--small-heading2) * 0.86);
+
+  /* スペース（余白・間隔） */
+  --space-xs: clamp(1.25rem, 1rem + 0.98vw, 1.875rem);
+  --space-sm: calc(var(--space-xs) * 1.5);
+  --space-md: calc(var(--space-xs) * 2); 
+  --space-lg: calc(var(--space-xs) * 3); 
+  --space-xl: calc(var(--space-xs) * 4); 
+  --space-jump: clamp(1.25rem, 0.35rem + 3.8vw, 3.75rem);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 基本設定 */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+    sans-serif;
+  font-size: var(--body);
+  color: var(--black);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1 {
+  font-size: var(--heading1);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+h2 {
+  font-size: var(--heading2);
 }
 
-.card {
-  padding: 2em;
+h3 {
+  font-size: var(--heading3);
 }
 
-.read-the-docs {
-  color: #888;
+/* next/image */
+span > img {
+  transition: 0.2s;
+}
+
+/* リセット */
+body,
+h1,
+h2,
+h3,
+p,
+figure,
+ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }

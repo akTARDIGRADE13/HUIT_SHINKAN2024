@@ -1,0 +1,12 @@
+/* PuzzleBoard.module.css */
+.puzzle {
+    display: grid;
+    width: 500px;
+    height: 500px;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: center;
+  }
+  

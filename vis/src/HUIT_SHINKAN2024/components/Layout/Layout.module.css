@@ -1,0 +1,27 @@
+.layout-wrapper {
+    position: relative;
+  }
+  
+  .layout-wrapper::before,
+  .layout-wrapper::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1rem;  /* ベルトの幅 */
+    content: '';
+    background-color: var(--light-accent);  /* ベルトの色 */
+  }
+  
+  .layout-wrapper::before {
+    left: 0;
+  }
+  
+  .layout-wrapper::after {
+    right: 0;
+  }
+
+  @media (width <= 1700px) {
+    .layout-wrapper::before,
+    .layout-wrapper::after {
+      display: none;  /* スマートフォンサイズでは非表示にする */
+    }}

@@ -1,0 +1,12 @@
+.container {
+    padding: var(--space-lg);
+    text-align: center;
+  }
+  
+  .title {
+    color: var(--gray-50);
+  }
+  
+  .message {
+    color: var(--gray-50);
+  }
