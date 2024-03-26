@@ -64,10 +64,10 @@ const Home: FC = () => {
     row.forEach((num, idx2) => {
       if (
         !(
-          idx === (((num - 1) / puzzleBoard.length) | 0) &&
-          idx2 === (num - 1) % puzzleBoard.length
-        ) ||
-        num === 0
+          (idx === (((num - 1) / puzzleBoard.length) | 0) &&
+            idx2 === (num - 1) % puzzleBoard.length) ||
+          num === 0
+        )
       ) {
         all_flag = false;
         return;
