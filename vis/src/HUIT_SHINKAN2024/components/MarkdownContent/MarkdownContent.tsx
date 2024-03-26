@@ -1,11 +1,14 @@
 import { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
-import remarkMath from 'remark-math';
-import remarkGfm from 'remark-gfm';
-import remarkToc from 'remark-toc';
 import rehypeKatex from 'rehype-katex';
-import rehypeSlug from 'rehype-slug';
 import rehypeRaw from 'rehype-raw';
+import rehypeSlug from 'rehype-slug';
+import {
+  remarkDefinitionList,
+  defListHastHandlers,
+} from 'remark-definition-list';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import CodeBlock from './components/CodeBlock'; // コードブロックのコンポーネント
 import MdImage from './components/MdImage'; // 画像のコンポーネント
 import { useMdContent } from 'HUIT_SHINKAN2024/hooks/useMdContent';
@@ -21,11 +24,12 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ mdPath }) => {
   return (
     <div className={styles['article-wrapper']}>
       <ReactMarkdown
-        remarkPlugins={[
-          remarkMath,
-          remarkGfm,
-          [remarkToc, { maxDepth: 2, heading: '目次' }],
-        ]}
+        remarkPlugins={[remarkDefinitionList, remarkMath, remarkGfm]}
+        remarkRehypeOptions={{
+          handlers: {
+            ...defListHastHandlers,
+          },
+        }}
         rehypePlugins={[rehypeRaw, rehypeKatex, rehypeSlug]}
         components={{
           pre: (props) => <CodeBlock {...props} />,

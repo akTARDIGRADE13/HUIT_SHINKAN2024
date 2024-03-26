@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChangeEvent } from 'react';
+import Container from 'HUIT_SHINKAN2024/components/Container/Container';
 import MarkdownContent from 'HUIT_SHINKAN2024/components/MarkdownContent/MarkdownContent';
 import PlayButton from './components/PlayButton';
 import SelectBox from './components/SelectBox';
@@ -146,7 +147,9 @@ const BaseVisualizer: React.FC<BaseVisualizerProps> = ({ children }) => {
         </div>
       </div>
       <div className={styles['svg-wrapper']}>{children}</div>
-      <MarkdownContent mdPath={`/md/howto.md`} />
+      <Container>
+        <MarkdownContent mdPath={`/md/howto.md`} />
+      </Container>
     </div>
   );
 };

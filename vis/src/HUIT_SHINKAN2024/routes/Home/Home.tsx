@@ -13,46 +13,75 @@ const Home: FC = () => {
   console.log(mode, currentFrame);
 
   const boards: number[][][] = [testCase1, testCase2, testCase3];
-  const puzzleBoard: number[][] = boards[testCase - 1];
+  const puzzleBoard: number[][] = JSON.parse(
+    JSON.stringify(boards[testCase - 1]),
+  );
+
   let x = 0,
     y = 0;
-  for (let i = 0; i < puzzleBoard.length; i++) {
-    const index = puzzleBoard[i].findIndex((element) => element === 0);
+  puzzleBoard.forEach((row, idx) => {
+    const index = row.findIndex((element) => element === 0);
     if (index !== -1) {
-      (x = i), (y = index); // 要素が見つかった場合、行と列のインデックスを返す
+      x = idx;
+      y = index;
     }
-  }
+  });
+
   let err = 0; // エラーがある場合、1以上の値が入る変数
   const dx: number[] = [0, 0, 1, -1],
     dy: number[] = [1, -1, 0, 0];
-  for (const [idx, char] of fileContent.split('').entries()) {
+
+  fileContent.split('').forEach((char, idx) => {
     let k = -1;
-    if (char === 'R') {
-      k = 0;
-    }
-    if (char === 'L') {
-      k = 1;
-    }
-    if (char === 'D') {
-      k = 2;
-    }
-    if (char === 'U') {
-      k = 3;
-    }
+    if (char === 'R') k = 0;
+    else if (char === 'L') k = 1;
+    else if (char === 'D') k = 2;
+    else if (char === 'U') k = 3;
     if (k === -1) {
       err = idx + 1;
-      break;
+      return;
     }
-    const nx = x + dx[k],
-      ny = y + dy[k];
+    const nx = x + dx[k];
+    const ny = y + dy[k];
     if (Math.min(nx, ny) < 0 || Math.max(nx, ny) >= puzzleBoard.length) {
       err = idx + 1;
-      break;
+      return;
     }
-    const tmp = puzzleBoard[nx][ny];
-    puzzleBoard[nx][ny] = puzzleBoard[x][y];
-    puzzleBoard[x][y] = tmp;
-    (x = nx), (y = ny);
+    [puzzleBoard[x][y], puzzleBoard[nx][ny]] = [
+      puzzleBoard[nx][ny],
+      puzzleBoard[x][y],
+    ];
+    x = nx;
+    y = ny;
+  });
+
+  let headerText = '';
+  let cost = 0;
+  if (mode === 'normal' || mode === 'manual') {
+    headerText = 'Total Cost:';
+    cost = fileContent.length;
+  } else if (mode === 'color1') {
+    headerText = 'Correct:';
+    puzzleBoard.forEach((row, idx) => {
+      row.forEach((num, idx2) => {
+        if (
+          idx === (((num - 1) / puzzleBoard.length) | 0) &&
+          idx2 === (num - 1) % puzzleBoard.length
+        ) {
+          cost += 1;
+        }
+      });
+    });
+  } else {
+    headerText = 'Manhattan Cost:';
+    puzzleBoard.forEach((row, idx) => {
+      row.forEach((num, idx2) => {
+        if (num === 0) return;
+        cost +=
+          Math.abs(idx - (((num - 1) / puzzleBoard.length) | 0)) +
+          Math.abs(idx2 - ((num - 1) % puzzleBoard.length));
+      });
+    });
   }
 
   return (
@@ -62,7 +91,12 @@ const Home: FC = () => {
           {err >= 1 ? (
             <div>{`${err}文字目の入力に誤りがあります`}</div>
           ) : (
-            <Puzzle board={puzzleBoard} mode={mode} />
+            <>
+              <h2>
+                {headerText} {cost}
+              </h2>
+              <Puzzle board={puzzleBoard} mode={mode} />
+            </>
           )}
         </BaseVisualizer>
       </Container>

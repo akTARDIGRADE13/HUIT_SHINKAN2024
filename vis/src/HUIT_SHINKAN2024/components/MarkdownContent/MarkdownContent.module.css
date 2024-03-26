@@ -1,57 +1,135 @@
+
 .article-wrapper{
-    max-width: 1280px;
-    margin-top: var(--space-lg);
-    margin-bottom: var(--space-lg);
+  margin-top: 80px;
+  margin-bottom: 80px;
 }
 
-  .content {
-    margin: 0 auto;
-    font-size: var(--body);
-    line-height: 1.6;
-    color: var(--gray-75);
-  }
-  
-  /* 見出しスタイル */
-  .content h1,
-  .content h2,
-  .content h3,
-  .content h4,
-  .content h5,
-  .content h6 {
-    padding-bottom: 8px;
-    margin-top: 24px;
-    margin-bottom: 16px;
-    color: var(--gray-75);
-    border-bottom: 2px solid var(--gray-75);
-  }
-  
-  /* リンクスタイル */
-  .content a {
-    color: var(--accent);
-    text-decoration: none;
-    border-bottom: 1px solid var(--accent);
-  }
-  
-  .content a:hover {
-    color: var(--dark-accent);
-    border-bottom-color: var(--dark-accent);
-  }
-  
-  /* リストスタイル */
-  .content ul,
-  .content ol {
-    margin-left: var(--space-md);
-  }
-
-  .content table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    border: 1px solid var(--gray-75);
+.article-title {
+padding: 10px;
+margin: var(--space-xs);
+font-weight: bold; /* 太字にする */
+color: var(--gray-75) /* タイトルの色を変更する */;
+text-align: center;
+background-color: var(--gray-10); /* タイトルの背景色 */
+border: 2px solid var(--gray-25); /* タイトルを囲む境界線 */
+border-radius: 5px; /* タイトルを囲む境界線の角を丸くする */
 }
 
-.content th, .content td {
-    padding: 8px; /* セルの内部の余白を追加する場合（任意） */
-    color: var(--gray-75);
-    border: 1px solid var(--gray-75);
+.article-meta {
+  color: var(--gray-50);
+  text-align: center;
 }
-  
+
+.content {
+  max-width: 90%;
+  margin: 0 auto;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: var(--body);
+  line-height: 1.6;
+  color: #333;
+}
+
+/* 見出しスタイル */
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+  padding-bottom: 8px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  color: var(--gray-75);
+  border-bottom: 2px solid var(--gray-75);
+}
+
+/* リンクスタイル */
+.content a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+}
+
+.content a:hover {
+  color: var(--dark-accent);
+  border-bottom-color: var(--dark-accent);
+}
+
+/* リストスタイル */
+.content ul {
+  margin-left: var(--space-md);
+  color: var(--gray-75);
+  list-style-type: square;
+}
+
+.content ol {
+  margin-left: var(--space-md);
+  color: var(--gray-75);
+}
+
+/* 定義リストスタイル */
+.content dl {
+padding: 10px; /* 枠線内の余白を設定 */
+margin-bottom: 20px;
+border: 1px solid var(--accent); /* 枠線のスタイルを追加 */
+border-radius: 5px; /* 枠線の角を丸める */
+}
+
+.content dt {
+font-size: var(--heading3);
+font-weight: bold;
+}
+
+.content dd {
+margin-bottom: 10px;
+margin-left: var(--space-md);
+}
+
+/* 追加部分 */
+.content p {
+margin-bottom: 15px;
+}
+
+.content blockquote {
+padding-left: 15px;
+margin: 15px 0;
+color: var(--gray-50);
+border-left: 3px solid var(--accent);
+}
+
+.content hr {
+height: 1px;
+margin: 20px 0;
+background-color: var(--gray-50);
+border: none;
+}
+
+/* 証明のスタイル */
+div.theorem {
+padding: 10px;
+border: 1px solid var(--gray-25);
+border-radius: 5px;
+}
+
+/* 追加部分（表のスタイル） */
+.content table {
+width: 100%;
+margin-bottom: 20px;
+border-collapse: collapse;
+}
+
+.content th,
+.content td {
+padding: 10px;
+text-align: center;
+border: 1px solid var(--gray-25);
+}
+
+.content th {
+font-weight: bold;
+background-color: var(--gray-10);
+}
+
+.content tbody tr:nth-child(even) {
+background-color: var(--gray-5);
+}

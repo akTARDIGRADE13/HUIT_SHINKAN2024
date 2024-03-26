@@ -11,13 +11,6 @@ const Puzzle: React.FC<PuzzleProps> = ({ board, mode }) => {
   const tileSize = 500 / board.length;
 
   const getTileProps = (number: number, x: number, y: number) => {
-    console.log(
-      number,
-      x,
-      y,
-      (number / board.length) | 0,
-      number % board.length,
-    );
     if (
       mode === 'color1' &&
       x === ((number / board.length) | 0) &&
