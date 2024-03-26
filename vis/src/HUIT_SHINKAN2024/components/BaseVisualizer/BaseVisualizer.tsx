@@ -148,7 +148,7 @@ const BaseVisualizer: React.FC<BaseVisualizerProps> = ({ children }) => {
       </div>
       <div className={styles['svg-wrapper']}>{children}</div>
       <Container>
-        <MarkdownContent mdPath={`/md/howto.md`} />
+        <MarkdownContent mdPath={`/HUIT_SHINKAN2024/md/howto.md`} />
       </Container>
     </div>
   );
