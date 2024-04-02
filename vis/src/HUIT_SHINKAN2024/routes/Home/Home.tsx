@@ -83,7 +83,7 @@ const Home: FC = () => {
     headerText = 'Manhattan Cost:';
   }
 
-  let cost = fileContent.length;
+  let cost = currentFrame;
   if (mode === 'color1' && !all_flag) {
     cost = puzzleBoard.reduce((acc, row, idx) => {
       return (
