@@ -100,6 +100,9 @@ const BaseVisualizer: React.FC<BaseVisualizerProps> = ({ children }) => {
       setCurrentFrame(() => {
         return Math.max(0, Math.min(maxFrame, newFrame));
       });
+      if (newFrame === maxFrame) {
+        setIsPlaying(false);
+      }
     },
     [maxFrame, setCurrentFrame],
   );
