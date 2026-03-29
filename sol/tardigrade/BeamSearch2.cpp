@@ -3,7 +3,6 @@
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace std;
 using namespace __gnu_pbds;
-using P = pair<int, int>;
 
 unsigned long long rng() {
     static unsigned long long rx = 123456789, ry = 362436069, rz = 521288629,
@@ -30,16 +29,17 @@ int n;
 
 class Node {
   private:
+    int zr;
+    int zc;
     int correct;
-    vector<int> board;
-    vector<int> fixed;
-    vector<P> pos;
+    vector<int> ban;
 
     inline int calcManhattanDist(int r, int c) const {
         int num = this->board[r * n + c] - 1;
         if(num == -1)
             return 0;
-        return abs(num / n - r) + abs(num % n - c);
+        return (abs(num / n - r) + abs(num % n - c)) *
+               (abs(num / n - r) + abs(num % n - c));
     }
 
     inline int calcZobIdx(int r, int c) const {
@@ -51,11 +51,13 @@ class Node {
     int turn = 0;
     unsigned long long hash;
     std::shared_ptr<Node> parent = nullptr;
-    vector<int> current_act;
+    int current_act = -1;
+    vector<int> board;
+    int under_limit = 0;
+    int left_limit = 0;
 
     Node() {}
-    Node(const vector<int> &G) : board(G) {
-        this->fixed.assign(n * n, 0);
+    Node(const vector<int> &G) : board(G), ban(n * n) {
         this->turn = 0;
         this->score = 0;
         this->correct = 0;
@@ -63,57 +65,59 @@ class Node {
         for(int i = 0; i < n; ++i)
             for(int j = 0; j < n; ++j) {
                 int d = calcManhattanDist(i, j);
-                if(d == 0 && this->board[i * n + j]) {
+                if(d == 0 && this->board[i * n + j])
                     ++correct;
-                }
                 this->score += d;
                 this->hash ^= zob[calcZobIdx(i, j)];
-                this->pos[this->board[i * n + j]] = P(i, j);
+                if(!this->board[i * n + j]) {
+                    this->zr = i;
+                    this->zc = j;
+                }
             }
-        this->current_act.clear();
-        this->fixed[0] = 1;
     }
 
     // ゲームの終了判定
     bool isDone() const { return this->correct == n * n - 1; }
 
     // 現在の状況でプレイヤーが可能な行動を全て取得する
-    vector<P> legalActions() const {
-        vector<P> ret;
-        for(int i = 1; i < n * n; ++i) {
-            if(this->fixed[i-1] != -1) continue;
-            for(int k = 0; k < 4; ++k) {
-                if((i - 1) / n <= pos[i].first && k == 0)
-                    continue;
-                if((i - 1) / n >= pos[i].first && k == 2)
-                    continue;
-                if((i - 1) % n <= pos[i].second && k == 1)
-                    continue;
-                if((i - 1) % n >= pos[i].second && k == 3)
-                    continue;
-                int nx = pos[i].first + dx[k], ny = pos[i].second + dy[k];
-                if(min(nx, ny) < 0 || max(nx, ny) >= n)
-                    continue;
-                if(this->fixed[nx * n + ny] == 2)
-                    continue;
-                ret.emplace_back(i, k);
-            }
+    vector<int> legalActions() const {
+        vector<int> ret;
+        ret.reserve(4);
+        for(int i = 0; i < 4; ++i) {
+            if(this->current_act >= 0 && abs(this->current_act - i) == 2)
+                continue;
+            if(zr + dx[i] < under_limit || zc + dy[i] < left_limit ||
+               max(zr + dx[i], zc + dy[i]) >= n)
+                continue;
+            if(ban[(zr + dx[i]) * n + zc + dy[i]])
+                continue;
+            ret.push_back(i);
         }
         return ret;
     }
 
-    void swapTile(int zr, int zc, int act) {
-        this->current_act.push_back(act);
+    unsigned long long getHashIfAction(int act) {
+        unsigned long long ret = this->hash;
+        ret ^= zob[calcZobIdx(zr, zc)];
+        ret ^= zob[calcZobIdx(zr + dx[act], zc + dy[act])];
+        swap(this->board[zr * n + zc],
+             this->board[(zr + dx[act]) * n + zc + dy[act]]);
+        ret ^= zob[calcZobIdx(zr, zc)];
+        ret ^= zob[calcZobIdx(zr + dx[act], zc + dy[act])];
+        swap(this->board[zr * n + zc],
+             this->board[(zr + dx[act]) * n + zc + dy[act]]);
+        return ret;
+    }
+
+    void doAction(int act) {
+        this->current_act = act;
 
         this->hash ^= zob[calcZobIdx(zr, zc)];
         this->hash ^= zob[calcZobIdx(zr + dx[act], zc + dy[act])];
         this->score -= calcManhattanDist(zr + dx[act], zc + dy[act]);
-        if(calcManhattanDist(zr + dx[act], zc + dy[act]) == 0) {
+        if(calcManhattanDist(zr + dx[act], zc + dy[act]) == 0)
             --this->correct;
-        }
 
-        swap(this->pos[this->board[zr * n + zc]],
-             this->pos[this->board[(zr + dx[act]) * n + zc + dy[act]]]);
         swap(this->board[zr * n + zc],
              this->board[(zr + dx[act]) * n + zc + dy[act]]);
 
@@ -122,8 +126,35 @@ class Node {
         this->score += calcManhattanDist(zr, zc);
         if(calcManhattanDist(zr, zc) == 0) {
             ++this->correct;
-            ++this->tate[zr];
-            ++this->yoko[zc];
+            if(zr == 0 && zc == 0) {
+                ban[zr * n + zc] = 1;
+            } else if(zr == 0) {
+                if(ban[zr * n + zc - 1]) {
+                    ban[zr * n + zc] = 1;
+                }
+            } else if(zc == 0) {
+                if(ban[(zr - 1) * n + zc]) {
+                    ban[zr * n + zc] = 1;
+                }
+            } else {
+                if(ban[zr * n + zc - 1] && ban[(zr - 1) * n + zc]) {
+                    ban[zr * n + zc] = 1;
+                }
+            }
+            if(zr == under_limit && act == 0) {
+                bool flag = true;
+                for(int i = left_limit; i < n; ++i)
+                    flag &= calcManhattanDist(zr, i) == 0;
+                if(flag)
+                    ++under_limit;
+            }
+            if(zc == left_limit && act == 1) {
+                bool flag = true;
+                for(int i = under_limit; i < n; ++i)
+                    flag &= calcManhattanDist(i, zc) == 0;
+                if(flag)
+                    ++left_limit;
+            }
         }
 
         zr += dx[act];
@@ -132,10 +163,12 @@ class Node {
     }
 };
 bool operator>(const Node &state_1, const Node &state_2) {
-    return state_1.score > state_2.score;
+    return state_1.score - (state_1.under_limit + state_1.left_limit) * 10000 >
+           state_2.score - (state_2.under_limit + state_2.left_limit) * 10000;
 }
 bool operator<(const Node &state_1, const Node &state_2) {
-    return state_1.score < state_2.score;
+    return state_1.score - (state_1.under_limit + state_1.left_limit) * 10000 <
+           state_2.score - (state_2.under_limit + state_2.left_limit) * 10000;
 }
 
 bool operator>(const std::shared_ptr<Node> &node_ptr1,
@@ -205,7 +238,7 @@ Node beamSearchActionSimple(const Node &state, const int beam_width) {
 
         cerr << t << ": " << best_state.score << endl;
 
-        if(best_state.isDone() || now_beam.empty() || t == 1000) {
+        if(best_state.isDone() || now_beam.empty() || t == 500) {
             break;
         }
     }
@@ -227,9 +260,16 @@ int main() {
 
     Node start(G);
 
-    Node ans = beamSearchActionSimple(start, 30000);
+    Node ans = beamSearchActionSimple(start, 2500);
 
     cerr << "score: " << ans.score << " turn: " << ans.turn << endl;
+    cerr << ans.under_limit << " " << ans.left_limit << endl;
+
+    for(int i = 0; i < n; ++i) {
+        for(int j = 0; j < n; ++j)
+            cerr << ans.board[i * n + j] << ' ';
+        cerr << endl;
+    }
 
     string order = "";
     string DRUL = "DRUL";
@@ -238,7 +278,7 @@ int main() {
         ans = *ans.parent;
     }
     reverse(order.begin(), order.end());
-    cout << order << endl;
+    cout << order;
 
     return 0;
 }

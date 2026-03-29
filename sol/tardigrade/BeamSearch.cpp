@@ -48,6 +48,8 @@ class Node {
   public:
     int score = 0;
     int turn = 0;
+    int under_limit = 0;
+    int left_limit = 0;
     unsigned long long hash;
     std::shared_ptr<Node> parent = nullptr;
     int current_act = -1;
@@ -82,7 +84,7 @@ class Node {
         for(int i = 0; i < 4; ++i) {
             if(this->current_act >= 0 && abs(this->current_act - i) == 2)
                 continue;
-            if(min(zr + dx[i], zc + dy[i]) < 0 ||
+            if(zr + dx[i] < under_limit || zc + dy[i] < left_limit ||
                max(zr + dx[i], zc + dy[i]) >= n)
                 continue;
             ret.push_back(i);
@@ -118,8 +120,25 @@ class Node {
         this->hash ^= zob[calcZobIdx(zr, zc)];
         this->hash ^= zob[calcZobIdx(zr + dx[act], zc + dy[act])];
         this->score += calcManhattanDist(zr, zc);
-        if(calcManhattanDist(zr, zc) == 0)
+        if(calcManhattanDist(zr, zc) == 0) {
             ++this->correct;
+            if(zr == under_limit && act == 0) {
+                bool flag = true;
+                for(int i = left_limit; i < n && flag; ++i) {
+                    flag &= calcManhattanDist(zr, i) == 0;
+                }
+                if(flag)
+                    ++under_limit;
+            }
+            if(zc == left_limit && act == 1) {
+                bool flag = true;
+                for(int i = under_limit; i < n && flag; ++i) {
+                    flag &= calcManhattanDist(i, zc) == 0;
+                }
+                if(flag)
+                    ++left_limit;
+            }
+        }
 
         zr += dx[act];
         zc += dy[act];
@@ -185,7 +204,7 @@ Node beamSearchActionSimple(const Node &state, const int beam_width) {
                 unsigned long long next_hash =
                     next_state.getHashIfAction(action);
                 if(check.find(next_hash) != check.end())
-                  continue;
+                    continue;
                 next_state.doAction(action);
                 next_beam.emplace(std::make_shared<Node>(next_state));
 
@@ -198,9 +217,9 @@ Node beamSearchActionSimple(const Node &state, const int beam_width) {
         // 状態の更新
         now_beam = next_beam;
 
-        cerr << t << ": " << best_state.score << endl;
-
-        if(best_state.isDone() || now_beam.empty() || t == 1000) {
+        cerr << t << ": " << best_state.score << ' ' << check.size()  << endl;
+        
+        if(best_state.isDone() || now_beam.empty()) {
             break;
         }
     }
@@ -225,6 +244,7 @@ int main() {
     Node ans = beamSearchActionSimple(start, 30000);
 
     cerr << "score: " << ans.score << " turn: " << ans.turn << endl;
+    cerr << ans.left_limit << ' ' << ans.under_limit << endl;
 
     string order = "";
     string DRUL = "DRUL";
